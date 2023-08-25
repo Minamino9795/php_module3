@@ -2,22 +2,21 @@
 
     use JetBrains\PhpStorm\Pure;
 
-    class Rectangle extends Shape
-    {
-        public int $width;
-        public int $heigh;
-        #[Pure] public function __construct(string $name, int $width, int $height)
-        {
-            parent::__construct($name);
+    class Rectangle implements Resizeable {
+        private $width;
+        private $height;
+    
+        public function __construct($width, $height) {
             $this->width = $width;
             $this->height = $height;
         }
-        public function calculateArea(): float|int
-        {
-            return $this->height * $this->width;
+    
+        public function getArea() {
+            return $this->width * $this->height;
         }
-        public function calculatePerimeter(): float|int
-        { 
-            return ($this->height + $this->width)* 2;
+    
+        public function resize($percentage) {
+            $this->width *= (1 + $percentage / 100);
+            $this->height *= (1 + $percentage / 100);
         }
     }

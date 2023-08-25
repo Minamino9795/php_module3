@@ -1,9 +1,17 @@
 <?php
 use JetBrains\PhpStorm\Pure;
-class Square extends Rectangle{
-    #[Pure] public function __construct(string $name, int $width)
-    {
-        parent::__construct($name ,$width,$width);
-        
+class Square implements Resizeable {
+    private $side;
+
+    public function __construct($side) {
+        $this->side = $side;
+    }
+
+    public function getArea() {
+        return $this->side * $this->side;
+    }
+
+    public function resize($percentage) {
+        $this->side *= (1 + $percentage / 100);
     }
 }

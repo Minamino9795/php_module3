@@ -2,23 +2,18 @@
 
 use JetBrains\PhpStorm\Pure;
 
-class Circle extends Shape
-{
-    public int|float $radius;
+class Circle implements Resizeable {
+    private $radius;
 
-    #[Pure] public function __construct(string $name, int|float $radius)
-    {
-        parent::__construct($name);
+    public function __construct($radius) {
         $this->radius = $radius;
     }
 
-    #[Pure] public function calculateArea(): int|float
-    {
-        return pi() * pow($this->radius, 2);
+    public function getArea() {
+        return pi() * $this->radius * $this->radius;
     }
 
-    #[Pure] public function calculatePerimeter(): int|float
-    {
-        return pi() * $this->radius * 2;
+    public function resize($percentage) {
+        $this->radius *= (1 + $percentage / 100);
     }
 }
