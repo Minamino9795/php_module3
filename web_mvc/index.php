@@ -11,8 +11,8 @@ index.php?controller=product&action=show&id=5
 
 index.php?controller=customer&action=index
 */
-$action = isset( $_GET['action'] ) ? $_GET['action'] : 'index';
-$controller = isset( $_GET['controller'] ) ? $_GET['controller'] : 'product';
+$action = isset($_GET['action']) ? $_GET['action'] : 'index';
+$controller = isset($_GET['controller']) ? $_GET['controller'] : 'order';
 switch ($controller) {
     case 'category':
         require_once 'Controllers/CategoryController.php';
@@ -22,10 +22,14 @@ switch ($controller) {
         require_once 'Controllers/ProductController.php';
         $objController = new ProductController();
         break;
-    // case 'customer':
-    //     require_once 'controllers/CustomerController.php';
-    //     $objController = new CustomerController();
-    //     break;
+    case 'customer':
+        require_once 'controllers/CustomerController.php';
+        $objController = new CustomerController();
+        break;
+    case 'order':
+        require_once 'controllers/OrderController.php';
+        $objController = new OrderController();
+        break;
     default:
         # code...
         break;

@@ -1,12 +1,12 @@
 <?php
 // Ket noi voi database
-class Category
+class Customer
 {
     // lay ta ca du lieu
     public static function all()
     {
         global $conn;
-        $sql = "SELECT * FROM `categories`";
+        $sql = "SELECT * FROM `customers`";
         $stmt = $conn->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $rows = $stmt->fetchAll();
@@ -20,7 +20,7 @@ class Category
     public static function find($id)
     {
         global $conn;
-        $sql = "SELECT * FROM `categories` WHERE `id` = $id";
+        $sql = "SELECT * FROM `customers` WHERE `id` = $id";
         $stmt = $conn->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $row = $stmt->fetch();
@@ -31,13 +31,17 @@ class Category
     public static function store($data)
     {
         global $conn;
-        $LOAIHANG = $data['NAME'];
-        $MOTA = $data['DESCRIPTION'];
+        $first_name = $data['first_name'];
+        $last_name = $data['last_name'];
+        $email = $data['email'];
+        $phone_number = $data['phone_number'];
+        $address = $data['address'];
 
-        $sql = "INSERT INTO `categories` 
-            ( `category_name`, `description`) 
+
+        $sql = "INSERT INTO `customers` 
+            ( `first_name`, `last_name`, `email`, `phone_number`, `address`) 
             VALUES 
-            ('$LOAIHANG','$MOTA')";
+            ('$first_name','$last_name','$email','$phone_number','$address')";
         //Thuc hien truy van
         $conn->exec($sql);
         return true;
@@ -47,11 +51,14 @@ class Category
     public static function update($id, $data)
     {
         global $conn;
-        $LOAIHANG = $data['NAME'];
-        $MOTA = $data['DESCRIPTION'];
+        $first_name = $data['first_name'];
+        $last_name = $data['last_name'];
+        $email = $data['email'];
+        $phone_number = $data['phone_number'];
+        $address = $data['address'];
 
 
-        $sql = "UPDATE `categories` SET `category_name` = '$LOAIHANG' ,  `description` = '$MOTA'  WHERE `id` = $id";
+        $sql = "UPDATE `customers` SET `first_name` = '$first_name' ,  `last_name` = '$last_name',  `email` = '$email',  `phone_number` = '$phone_number',  `address` = '$address'  WHERE `id` = $id";
         //Thuc hien truy van
         $conn->exec($sql);
         return true;
@@ -61,7 +68,7 @@ class Category
     public static function delete($id)
     {
         global $conn;
-        $sql = "DELETE FROM `categories` WHERE id = $id";
+        $sql = "DELETE FROM `customers` WHERE id = $id";
         // Thuc thi SQL
         $conn->exec($sql);
         return true;

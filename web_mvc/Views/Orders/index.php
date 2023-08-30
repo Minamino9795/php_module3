@@ -4,9 +4,12 @@
 <a href="index.php?action=create"> Create </a>
 <table border="1">
     <tr>
+        
         <th>Id</th>
-        <th>Category</th>
-        <th>Description</th>
+        <th>Customer</th>
+        <th>Order_date</th>
+        <th>Total_amount</th>
+        
         <th>ACTION</th>
     </tr>
     <!-- Bắt đầu lặp -->
@@ -18,8 +21,12 @@
     ?>
         <tr>
             <td><?php echo $r['id']; ?> </td>
-            <td><?php echo $r['category_name']; ?> </td>
-            <td><?php echo $r['description']; ?> </td>
+            <td><?php echo $r['email']; ?> </td>
+            <td><?php echo $r['order_date']; ?> </td>
+            <td><?php echo $r['total_amount']; ?> </td>
+           
+            
+           
             <td>
             <a href="index.php?action=edit&id=<?php echo $r['id']; ?>">
                     <button type="button" class="btn btn-primary">Edit</button> |
