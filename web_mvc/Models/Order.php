@@ -2,19 +2,82 @@
 // Ket noi voi database
 class Order
 {
-    // lay ta ca du lieu
+    //lay ta ca du lieu
+    
     public static function all()
     {
+        // global $conn;
+        // $sql = "SELECT customers.email, orders.*
+        //     FROM customers
+        //     JOIN orders ON customers.id = orders.customer_id;";
+        // $stmt = $conn->query($sql);
+        // $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        // $rows = $stmt->fetchAll();
+
         global $conn;
-        $sql = "SELECT customers.email, orders.*
+
+        if (isset($_GET["s"]) || isset($_GET["s1"])) {
+            $s = isset($_GET["s"]) ? $_GET["s"] : "";
+            $s1 = isset($_GET["s1"]) ? $_GET["s1"] : "";
+            $conditions = [];
+
+           
+
+            $conditionsString = implode(" OR ", $conditions);
+
+            $sql = "SELECT customers.email, orders.*
+                 FROM customers
+                JOIN orders ON customers.id = orders.customer_id;";
+
+            if (!empty($conditionsString)) {
+                $sql .= " WHERE $conditionsString";
+            }
+
+            $sql .= " ORDER BY products.id DESC";
+        } else {
+            $s = "";
+            $s1 = "";
+            $sql = "SELECT customers.email, orders.*
             FROM customers
-            JOIN orders ON customers.id = orders.customer_id;";
+           JOIN orders ON customers.id = orders.customer_id
+                ORDER BY orders.id DESC";
+        }
+
+        $phonesPerPage = 4;
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start_index = ($current_page - 1) * $phonesPerPage;
+
+        // Thay đổi câu truy vấn đếm tổng số bản ghi phù hợp với điều kiện tìm kiếm
+        $sql_count = "SELECT COUNT(*) AS total_records FROM products
+                JOIN categories ON products.category_id = categories.id";
+
+        if (!empty($conditionsString)) {
+            $sql_count .= " WHERE $conditionsString";
+        }
+
+        $stmt_count = $conn->query($sql_count);
+        $total_records = $stmt_count->fetch(PDO::FETCH_ASSOC)['total_records'];
+
+        $sql .= " LIMIT $start_index, $phonesPerPage";
         $stmt = $conn->query($sql);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $rows = $stmt->fetchAll();
-        // Tra ve cho Model
-        return $rows;
+        $orders = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        $data = [
+            'orders' => $orders,
+            'total_records' => $total_records,
+            'current_page' => $current_page,
+            'phones_per_page' => $phonesPerPage,
+
+        ];
+
+        // Trả về cho Model
+        return $data;
     }
+
+
+
+
+
     // lay chi tiet 1 du lieu
     public static function find($id)
     {

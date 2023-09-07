@@ -5,8 +5,14 @@ class CategoryController
     // Hien thi danh sach records => table
     public function index()
     {
-        $items = Category::all();
-
+        $categories = Category::all();
+        if (isset($_GET['success']) && $_GET['success'] == 1) {
+            $successMessage = 'THÊM THÀNH CÔNG!';
+        } else if (isset($_GET['success']) && $_GET['success'] == 2) {
+            $successMessage1 = 'CẬP NHẬT THÀNH CÔNG!';
+        } else if (isset($_GET['success']) && $_GET['success'] == 3) {
+            $successMessage2 = 'XÓA THÀNH CÔNG!';
+        }
         // Truyen data xuong view
         require_once 'Views/Categories/index.php';
     }
@@ -23,7 +29,7 @@ class CategoryController
         // Goi model
         Category::store($_POST);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?Controllers=categories&action=index");
+        echo '<script>window.location.href = "index.php?controller=category&action=index&success=1";</script>';
     }
 
 
@@ -40,9 +46,9 @@ class CategoryController
     public function update()
     {
         $id = $_GET['id'];
-        Category::update( $id, $_POST );
+        Category::update($id, $_POST);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?Controllers=categories&action=index");
+        echo '<script>window.location.href = "index.php?controller=category&action=index&success=2";</script>';
     }
 
     // Xoa
@@ -51,10 +57,11 @@ class CategoryController
         $id = $_GET['id'];
         Category::delete($id);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?Controllers=categories&action=index");
+        echo '<script>window.location.href = "index.php?controller=category&action=index&success=3";</script>';
     }
     //Xem chi tiet
-    public function show(){
+    public function show()
+    {
         $id = $_GET['id'];
         $row = Category::find($id);
 

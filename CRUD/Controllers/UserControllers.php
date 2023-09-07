@@ -46,5 +46,13 @@ class UserController {
       User :: delete($id);
         header("Location: index.php?controller=user&action=index");
     }
+    //Xem chi tiet
+    public function show(){
+        $id = $_GET['id'];
+        $row = user::find($id);
+
+        // Truyen xuong view
+        require_once 'Views/Users/show.php';
+    }
  
 }

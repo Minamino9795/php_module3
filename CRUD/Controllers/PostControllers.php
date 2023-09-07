@@ -22,7 +22,7 @@ class PostController {
        
         Post::store($_POST);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?controller=post&action=index");
+        echo '<script>window.location.href = "index.php?controller=post&action=index";</script>';
 
     }
     // Hien thi form chinh sua
@@ -40,7 +40,7 @@ class PostController {
        
         Post::update( $id, $_POST );
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?controller=post&action=index");
+        echo '<script>window.location.href = "index.php?controller=post&action=index";</script>';
         require_once 'views/Posts/edit.php';
 
     }
@@ -49,7 +49,15 @@ class PostController {
     public function destroy(){
         $id = $_GET['id'];
       Post :: delete($id);
-        header("Location: index.php?controller=post&action=index");
+      echo '<script>window.location.href = "index.php?controllers=post&action=index";</script>';
+    }
+    //Xem chi tiet
+    public function show(){
+        $id = $_GET['id'];
+        $row = Post::find($id);
+
+        // Truyen xuong view
+        require_once 'Views/Posts/show.php';
     }
  
 }

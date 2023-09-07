@@ -5,8 +5,14 @@ class CustomerController
     // Hien thi danh sach records => table
     public function index()
     {
-        $items = Customer::all();
-
+        $customers = Customer::all();
+        if (isset($_GET['success']) && $_GET['success'] == 1) {
+            $successMessage = 'THÊM THÀNH CÔNG!';
+        } else if (isset($_GET['success']) && $_GET['success'] == 2) {
+            $successMessage1 = 'CẬP NHẬT THÀNH CÔNG!';
+        } else if (isset($_GET['success']) && $_GET['success'] == 3) {
+            $successMessage2 = 'XÓA THÀNH CÔNG!';
+        }
         // Truyen data xuong view
         require_once 'Views/Customers/index.php';
     }
@@ -23,7 +29,7 @@ class CustomerController
         // Goi model
         Customer::store($_POST);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?Controllers=customer&action=index");
+        echo '<script>window.location.href = "index.php?controller=customer&action=index&success=1";</script>';
     }
 
 
@@ -40,9 +46,9 @@ class CustomerController
     public function update()
     {
         $id = $_GET['id'];
-        Customer::update( $id, $_POST );
+        Customer::update($id, $_POST);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?Controllers=customer&action=index");
+        echo '<script>window.location.href = "index.php?controller=customer&action=index&success=2";</script>';
     }
 
     // Xoa
@@ -51,10 +57,11 @@ class CustomerController
         $id = $_GET['id'];
         Customer::delete($id);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?Controllers=customer&action=index");
+        echo '<script>window.location.href = "index.php?controller=customer&action=index&success=3";</script>';
     }
     //Xem chi tiet
-    public function show(){
+    public function show()
+    {
         $id = $_GET['id'];
         $row = Customer::find($id);
 

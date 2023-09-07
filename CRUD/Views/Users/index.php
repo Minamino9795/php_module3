@@ -32,6 +32,7 @@
         <td><?php echo $r['phone'];?> </td>
         <td>
             <a href="index.php?action=edit&id=<?php echo $r['id'];?>">Sua</a> |
+            <a href="index.php?action=show&id=<?php echo $r['id'];?>">Xem</a> | 
            
             <a onclick=" return confirm('Are you sure ?'); " href="index.php?action=destroy&id=<?php echo $r['id'];?>">Xoa</a>
         </td>

@@ -18,8 +18,8 @@
     {
         global $conn;
         $sql = "SELECT posts.*, users.email AS user_email
-        FROM posts
-        JOIN users ON posts.user_id = users.id
+        FROM users
+        JOIN posts ON posts.user_id = users.id
         WHERE posts.id = $id";
 
         $stmt = $conn->query($sql);

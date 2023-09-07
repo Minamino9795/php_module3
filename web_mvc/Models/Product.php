@@ -6,19 +6,77 @@ class Product
     public static function all()
     {
         global $conn;
-        $sql = "SELECT categories.category_name, products.*
-            FROM categories
-            JOIN products ON categories.id = products.category_id;";
+
+        if (isset($_GET["s"]) || isset($_GET["s1"])) {
+            $s = isset($_GET["s"]) ? $_GET["s"] : "";
+            $s1 = isset($_GET["s1"]) ? $_GET["s1"] : "";
+            $conditions = [];
+
+            if (!empty(trim($s))) {
+                $conditions[] = "(products.product_name LIKE '%$s%')";
+            }
+
+            if (!empty(trim($s1))) {
+                $conditions[] = "products.id LIKE '%$s1%'";
+            }
+
+            $conditionsString = implode(" OR ", $conditions);
+
+            $sql = "SELECT products.*, categories.category_name AS category_name
+                FROM products
+                JOIN categories ON products.category_id = categories.id";
+
+            if (!empty($conditionsString)) {
+                $sql .= " WHERE $conditionsString";
+            }
+
+            $sql .= " ORDER BY products.id DESC";
+        } else {
+            $s = "";
+            $s1 = "";
+            $sql = "SELECT products.*, categories.category_name AS category_name
+                FROM products
+                JOIN categories ON products.category_id = categories.id
+                ORDER BY products.id DESC";
+        }
+
+        $phonesPerPage = 4;
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start_index = ($current_page - 1) * $phonesPerPage;
+
+        // Thay đổi câu truy vấn đếm tổng số bản ghi phù hợp với điều kiện tìm kiếm
+        $sql_count = "SELECT COUNT(*) AS total_records FROM products
+                JOIN categories ON products.category_id = categories.id";
+
+        if (!empty($conditionsString)) {
+            $sql_count .= " WHERE $conditionsString";
+        }
+
+        $stmt_count = $conn->query($sql_count);
+        $total_records = $stmt_count->fetch(PDO::FETCH_ASSOC)['total_records'];
+
+        $sql .= " LIMIT $start_index, $phonesPerPage";
         $stmt = $conn->query($sql);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $rows = $stmt->fetchAll();
-        // Tra ve cho Model
-        return $rows;
+        $products = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        $data = [
+            'products' => $products,
+            'total_records' => $total_records,
+            'current_page' => $current_page,
+            'phones_per_page' => $phonesPerPage,
+            'search_s' => $s, // Thêm biến search_s để giữ lại giá trị của tham số tìm kiếm s
+            'search_s1' => $s1, // Thêm biến search_s1 để giữ lại giá trị của tham số tìm kiếm s1
+        ];
+
+        // Trả về cho Model
+        return $data;
     }
     // lay chi tiet 1 du lieu
     public static function find($id)
     {
         global $conn;
+
+
         $sql = "SELECT products.*, categories.category_name AS category_name
         FROM categories
         JOIN products ON products.category_id = categories.id
@@ -31,9 +89,11 @@ class Product
     }
 
 
+
     // Them moi du lieu
     public static function store($data)
     {
+        
         global $conn;
         $product_name = $data['product_name'];
         $category_id = $data['category_id'];
@@ -49,17 +109,19 @@ class Product
             if (move_uploaded_file($_FILES['image_url']['tmp_name'], $uploadFile)) {
                 $image = '/Public/Uploads/' . $_FILES['image_url']['name'];
             }
+            
 
-
-            $sql = "INSERT INTO `products` 
+                $sql = "INSERT INTO `products` 
             ( `product_name`, `category_id`,`price`,`stock_quantity`,`image_url`) 
             VALUES 
             ('$product_name','$category_id','$price','$quantity','$image')";
-            //Thuc hien truy van
-            $conn->exec($sql);
-            return true;
+                //Thuc hien truy van
+                $conn->exec($sql);
+                return true;
+            }
         }
-    }
+    
+   
 
     // Cap nhat du lieu
     public static function update($id, $data)

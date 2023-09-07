@@ -5,8 +5,16 @@ require_once 'Models/Product.php';
 class ProductController {
     // Hien thi danh sach records => table
     public function index(){
-        $items =Product::all();
-      
+        $products =Product::all();
+        if (isset($_GET['success']) && $_GET['success'] == 1) {
+            $successMessage = 'THÊM THÀNH CÔNG!';
+        }
+        else if (isset($_GET['success']) && $_GET['success'] == 2) {
+            $successMessage1 = 'CẬP NHẬT THÀNH CÔNG!';
+        }
+        else if (isset($_GET['success']) && $_GET['success'] == 3) {
+            $successMessage2 = 'XÓA THÀNH CÔNG!';
+        }
         // Truyen data xuong view
         require_once 'Views/Products/index.php';
        
@@ -14,6 +22,8 @@ class ProductController {
     // Hien thi form them moi
     public function create(){
         $rows = Category::all();
+        $r = Category::create();
+
         require_once 'Views/Products/create.php';
     }
     // Xu ly them moi
@@ -22,7 +32,7 @@ class ProductController {
        
         Product::store($_POST);
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?controller=product&action=index");
+        echo '<script>window.location.href = "index.php?controller=product&action=index&success=1";</script>';
 
 
     }
@@ -30,7 +40,8 @@ class ProductController {
     public function edit(){
         $id = $_GET['id'];
         $r = Product::find($id);
-        $categories = Category::all();
+        $rows = Category::create();
+
 
         // Truyen xuong view
         require_once 'Views/Products/edit.php';
@@ -41,9 +52,10 @@ class ProductController {
        
         Product::update( $id, $_POST );
         // Chuyen huong ve trang danh sach
-        header("Location: index.php?controller=product&action=index");
-        ;
-        require_once 'views/Products/edit.php';
+        echo '<script>window.location.href = "index.php?controller=product&action=index&success=2";</script>';
+
+        
+        require_once 'Views/Products/edit.php';
 
     }
 
@@ -51,7 +63,8 @@ class ProductController {
     public function destroy(){
         $id = $_GET['id'];
       Product :: delete($id);
-      header("Location: index.php?controller=product&action=index");
+      echo '<script>window.location.href = "index.php?controller=product&action=index&success=3";</script>';
+
 
     }
     //Xem chi tiet
@@ -62,5 +75,6 @@ class ProductController {
         // Truyen xuong view
         require_once 'Views/Products/show.php';
     }
+    
  
 }

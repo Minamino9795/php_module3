@@ -1,7 +1,7 @@
 <?php
 
 ?>
-<form action="index.php?action=store" method="post">
+<form action="index.php?action=update&id=<?= $r['id']; ?>" method="post">
     user_id :
     <select name="user_id" class="form-control">
                                     <?php foreach ($users as $user) : ?>
